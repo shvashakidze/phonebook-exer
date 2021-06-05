@@ -1,6 +1,7 @@
 import React, { useState,  useEffect } from 'react'
 import axios from 'axios'
 import css from './index.css'
+import noteService from './services/notes'
 
 const RenderPersons =({persons, searchName})=>{
      return(
@@ -37,15 +38,12 @@ const App = () => {
 //const focusName = useRef();
 
 useEffect(() => {
-  console.log('effect')
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
+  noteService
+    .getAll()
+    .then(initialNotes => {
+    setNotes(initialNotes)
+  })
 }, [])
-console.log('render', persons.length, 'notes')
 
 const clearInput = ()=>{
   setNewName('');
@@ -65,9 +63,9 @@ const handleNumberChange=(event)=>{
 const handleSubmit = event => {
   event.preventDefault()
   const noteObject = {
-    content: newName,
-    date: new Date(),
-    important: Math.random() < 0.5,
+    name: newName,
+    number: newNumber,
+    id: Math.random() < 0.5
   }
 
   axios
